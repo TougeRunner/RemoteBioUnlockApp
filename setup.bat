@@ -30,7 +30,7 @@ if not exist config.json (
     echo [SETUP] Creating default config.json...
     (
         echo {
-        echo     "pc_name": "My PC",
+        echo     "pc_name": "My PC Name",
         echo     "secret_key": "change-this-to-something-random",
         echo     "unlock_pin": "YOUR-PIN-HERE",
         echo     "port": 5000,
