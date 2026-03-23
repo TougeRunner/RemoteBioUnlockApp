@@ -161,12 +161,11 @@ if __name__ == '__main__':
     print(f"  Status   : Listening for unlock requests...")
     print("=" * 50)
 
-    app.run(
-        host='0.0.0.0', # allows the server to accept requests from any IP address on another network, not just from the machine it's running on. This is essential for the phone to communicate with the server.
-        port=PORT,
-        debug=False,
-        ssl_context=None # kept off for simplicity, but you can set up SSL if you want to encrypt the communication between your phone and PC. This would require generating SSL certificates and configuring the server to use them, which is a more advanced setup. future update maybe :
-    )
+
+
+    from waitress import serve
+    print("[RemoteBioUnlock] Using Waitress production server.")
+    serve(app, host='0.0.0.0', port=PORT)
 
 
 
