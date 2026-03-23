@@ -145,3 +145,41 @@ def status():
         "pc_name": config['pc_name'],
         "local_ip": socket.gethostbyname(socket.gethostname())
     }), 200
+
+
+
+# ============================================================
+# Startup - this runs the server when you launch the script
+# ============================================================
+
+if __name__ == '__main__':
+    print("=" * 50)
+    print("  RemoteBioUnlock Server")
+    print(f"  PC Name  : {config['pc_name']}")
+    print(f"  Local IP : {socket.gethostbyname(socket.gethostname())}")
+    print(f"  Port     : {PORT}")
+    print(f"  Status   : Listening for unlock requests...")
+    print("=" * 50)
+
+    app.run(
+        host='0.0.0.0', # allows the server to accept requests from any IP address on another network, not just from the machine it's running on. This is essential for the phone to communicate with the server.
+        port=PORT,
+        debug=False,
+        ssl_context=None # kept off for simplicity, but you can set up SSL if you want to encrypt the communication between your phone and PC. This would require generating SSL certificates and configuring the server to use them, which is a more advanced setup. future update maybe :
+    )
+
+
+
+# Small python script to test the server by simulating a phone request. You can run this in your terminal to see how the server responds to an unlock request with a valid token. Just make sure to replace the SECRET_KEY and URL if needed.
+#============================================================
+#    python -c "
+# import hmac, hashlib, time, requests
+
+# SECRET_KEY = 'change-this-to-something-random'
+# timestamp = str(time.time())
+# message = timestamp.encode('utf-8')
+# token = hmac.new(SECRET_KEY.encode('utf-8'), message, hashlib.sha256).hexdigest()
+
+# response = requests.post('http://localhost:5000/unlock', json={'token': token, 'timestamp': timestamp})
+# print(response.json())
+# "
