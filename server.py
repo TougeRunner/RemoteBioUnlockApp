@@ -168,4 +168,18 @@ if __name__ == '__main__':
         ssl_context=None # kept off for simplicity, but you can set up SSL if you want to encrypt the communication between your phone and PC. This would require generating SSL certificates and configuring the server to use them, which is a more advanced setup. future update maybe :
     )
 
-  
+
+
+# Small python script to test the server by simulating a phone request. You can run this in your terminal to see how the server responds to an unlock request with a valid token. Just make sure to replace the SECRET_KEY and URL if needed.
+#============================================================
+#    python -c "
+# import hmac, hashlib, time, requests
+
+# SECRET_KEY = 'change-this-to-something-random'
+# timestamp = str(time.time())
+# message = timestamp.encode('utf-8')
+# token = hmac.new(SECRET_KEY.encode('utf-8'), message, hashlib.sha256).hexdigest()
+
+# response = requests.post('http://localhost:5000/unlock', json={'token': token, 'timestamp': timestamp})
+# print(response.json())
+# "
