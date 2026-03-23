@@ -145,3 +145,27 @@ def status():
         "pc_name": config['pc_name'],
         "local_ip": socket.gethostbyname(socket.gethostname())
     }), 200
+
+
+
+# ============================================================
+# Startup - this runs the server when you launch the script
+# ============================================================
+
+if __name__ == '__main__':
+    print("=" * 50)
+    print("  RemoteBioUnlock Server")
+    print(f"  PC Name  : {config['pc_name']}")
+    print(f"  Local IP : {socket.gethostbyname(socket.gethostname())}")
+    print(f"  Port     : {PORT}")
+    print(f"  Status   : Listening for unlock requests...")
+    print("=" * 50)
+
+    app.run(
+        host='0.0.0.0', # allows the server to accept requests from any IP address on another network, not just from the machine it's running on. This is essential for the phone to communicate with the server.
+        port=PORT,
+        debug=False,
+        ssl_context=None # kept off for simplicity, but you can set up SSL if you want to encrypt the communication between your phone and PC. This would require generating SSL certificates and configuring the server to use them, which is a more advanced setup. future update maybe :
+    )
+
+  
