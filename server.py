@@ -101,3 +101,47 @@ def unlock():
     else:
         print("[RemoteBioUnlock] Unlock failed.")
         return jsonify({"status": "error", "message": "Unlock failed."}), 500
+    
+
+# ============================================================
+# Windows unlock function - this is where the actual unlocking happens
+# Win32 API is used here, ctypes is for python to reach windows and wind11.user32 is for peripheral inputs.
+# ============================================================
+
+
+def unlock_windows():
+    try:
+        # Step 1 - Simulate pressing Ctrl to wake the lock screen
+        ctypes.windll.user32.keybd_event(0x11, 0, 0, 0)  # Ctrl down
+        ctypes.windll.user32.keybd_event(0x11, 0, 2, 0)  # Ctrl up
+        time.sleep(0.5) #change if the pc takes longer to wake up, but 0.5 seconds is usually enough for the lock screen to be ready for input after being woken up. If the lock screen takes longer than this to become active, you may need to increase this delay to ensure that the subsequent key presses are registered correctly.
+
+        # Step 2 - Type the unlock PIN one character at a time
+        for character in UNLOCK_PIN:
+            vk_code = ord(character.upper())
+            ctypes.windll.user32.keybd_event(vk_code, 0, 0, 0)  # Key down
+            ctypes.windll.user32.keybd_event(vk_code, 0, 2, 0)  # Key up
+            time.sleep(0.05)
+
+        # Step 3 - Preess enter to submit the PIN
+        time.sleep(0.1)
+        ctypes.windll.user32.keybd_event(0x0D, 0, 0, 0)  # Enter down
+        ctypes.windll.user32.keybd_event(0x0D, 0, 2, 0)  # Enter up
+
+        return True
+
+    except Exception as e:
+        print(f"[RemoteBioUnlock] Unlock error: {e}")
+        return False
+    
+# ============================================================
+# Status endpoint - phone uses this to check if PC is online
+# ============================================================
+
+@app.route('/status', methods=['GET'])
+def status():
+    return jsonify({
+        "status": "online",
+        "pc_name": config['pc_name'],
+        "local_ip": socket.gethostbyname(socket.gethostname())
+    }), 200
